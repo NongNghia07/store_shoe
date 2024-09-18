@@ -22,5 +22,5 @@ public interface ProductService {
 
     ServiceResponseDTO<ProductsResponseDTO> deletes(List<UUID> ids);
 
-    ServiceResponseDTO<ProductsResponseDTO> updateQuantity(UUID productID, Integer quantity);
+    Boolean updateQuantity(UUID productID, Integer quantity);
 }

@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/v1/product")
@@ -17,6 +19,12 @@ public class ProductRestController {
     @Autowired
     public ProductRestController(ProductService productService) {
         this.productService = productService;
+    }
+
+    @GetMapping
+    public ResponseEntity<?> getAll() {
+        ServiceResponseDTO<List<ProductsResponseDTO>> productResponseDTOs = productService.getAll();
+        return ResponseEntity.ok(productResponseDTOs);
     }
 
     @PostMapping

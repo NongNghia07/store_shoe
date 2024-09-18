@@ -5,6 +5,7 @@ import com.example.store.dto.request.ImportTicket_ProductRequestDTO;
 import com.example.store.dto.request.Product_VariantRequestDTO;
 import com.example.store.dto.response.Product_VariantsResponseDTO;
 import com.example.store.dto.response.util.ServiceResponseDTO;
+import com.example.store.entity.ImportTicket_Product;
 import com.example.store.entity.Product_Variants;
 import com.example.store.entity.Products;
 import com.example.store.exception.ApiRequestException;
@@ -132,15 +133,14 @@ public class Product_VariantServiceImpl implements Product_VariantService {
     }
 
     @Override
-    public Map<String, Object> addQuantity(List<ImportTicket_ProductRequestDTO> iPTProductRequestDTOs) {
+    public Map<String, Object> addQuantity(List<ImportTicket_Product> importTicketProducts) {
         try {
-            Map<UUID, Integer> productQuantityMap = new HashMap<>();
-            iPTProductRequestDTOs.forEach(p -> {
-                productQuantityMap.put(p.getVariantId(), p.getQuantity());
-            });
-            Map<String, Object> map = updateQuantity(productQuantityMap, true);
+            Map<UUID, Integer> variantQuantityMap = new HashMap<>();
+            importTicketProducts.forEach(p -> variantQuantityMap.put(p.getId().getVariantID(), p.getQuantity()));
+            Map<String, Object> map = updateQuantity(variantQuantityMap, true);
             @SuppressWarnings("unchecked") List<Product_Variants> productVariants = (List<Product_Variants>) map.get("productVariants");
-            Integer totalQuantity = (Integer) map.get("totalQuantity");
+            AtomicInteger atomicInteger = (AtomicInteger) map.get("totalQuantity");
+            Integer totalQuantity = atomicInteger.get();
             product_VariantRepository.saveAll(productVariants);
             return returnTotalQuantity(productVariants.get(0).getProduct().getId(), totalQuantity);
         }catch (Exception e){
@@ -151,9 +151,7 @@ public class Product_VariantServiceImpl implements Product_VariantService {
     @Override
     public Map<String, Object> sellQuantity(List<Bill_ProductRequestDTO> bill_ProductRequestDTOs) {
         Map<UUID, Integer> productQuantityMap = new HashMap<>();
-        bill_ProductRequestDTOs.forEach(p -> {
-            productQuantityMap.put(p.getVariantID(), p.getQuantity());
-        });
+        bill_ProductRequestDTOs.forEach(p -> productQuantityMap.put(p.getVariantID(), p.getQuantity()));
         Map<String, Object> map = updateQuantity(productQuantityMap, false);
         @SuppressWarnings("unchecked") List<Product_Variants> productVariants = (List<Product_Variants>) map.get("productVariants");
         Integer totalQuantity = (Integer) map.get("totalQuantity");
@@ -170,17 +168,17 @@ public class Product_VariantServiceImpl implements Product_VariantService {
     }
 
 
-    private  Map<String, Object> updateQuantity(Map<UUID, Integer> billProduct, Boolean addQuantity){
+    private  Map<String, Object> updateQuantity(Map<UUID, Integer>variantQuantity, Boolean addQuantity){
         Map<String, Object> result = new HashMap<>();
         List<Product_Variants> productVariants = new ArrayList<>();
         AtomicInteger totalQuantity = new AtomicInteger(0);
-        billProduct.forEach((id, quantity) -> {
+        variantQuantity.forEach((id, quantity) -> {
             Product_Variants variants = product_VariantRepository.findById(id).orElseThrow(() -> new ApiRequestException("Variant not found"));
             if (!addQuantity && variants.getQuantity() < quantity) {
                 throw new ApiRequestException("Quantity cannot be less than zero.");
             }
             if(addQuantity) {
-                variants.setQuantity(variants.getQuantity() + quantity);
+                variants.setQuantity(variants.getQuantity()!=null? variants.getQuantity() + quantity : quantity);
             }else {
                 variants.setQuantity(variants.getQuantity() - quantity);
             }
@@ -193,11 +191,8 @@ public class Product_VariantServiceImpl implements Product_VariantService {
     }
 
     private Boolean checkDuplicateSizeAndColor(Product_Variants productVariant, Product_VariantRequestDTO productVariantRequestDTO){
-        if(productVariant.getSize().equalsIgnoreCase(productVariantRequestDTO.getSize())
-                && productVariant.getColor().equalsIgnoreCase(productVariantRequestDTO.getColor())){
-            return true;
-        }
-        return false;
+        return productVariant.getSize().equalsIgnoreCase(productVariantRequestDTO.getSize())
+                && productVariant.getColor().equalsIgnoreCase(productVariantRequestDTO.getColor());
     }
 
     private Map<String, Object> returnTotalQuantity(UUID productID, Integer totalQuantity){

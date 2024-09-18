@@ -21,13 +21,16 @@ public class ImportTicket_Product implements Serializable {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "price")
+    private Double price;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("variantID")
 //    @JoinColumn(name = "variant_ID")
     @JsonIgnore
     private Product_Variants productVariant;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("importTicketID")
 //    @JoinColumn(name = "importTicket_ID")
     @JsonIgnore

@@ -42,8 +42,6 @@ public class ProductsResponseDTO {
         this.isStatus = products.getIsStatus();
         if(products.getCategory() != null)
             this.category = new CategoriesResponseDTO(products.getCategory());
-        if(products.getProductVariants() != null)
-            this.productVariantsResponseDTOs = convProductVariantResponseDTOs(products.getProductVariants());
     }
 
     private Set<Product_VariantsResponseDTO> convProductVariantResponseDTOs(Set<Product_Variants> productVariants) {

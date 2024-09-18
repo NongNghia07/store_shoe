@@ -40,9 +40,10 @@ public class Import_Ticket implements Serializable {
     @Column(name = "is_status")
     private Boolean isStatus;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "importTicket")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "supplier_ID")
     @JsonIgnore
-    private Set<ImportTicket_Supplier> importTicketSuppliers;
+    private Supplier supplier;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "importTicket")
     @JsonIgnore

@@ -10,7 +10,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ImportTicket_ProductRequestDTO {
-    private UUID variantId;
-    private UUID importTicketID;
+    private Product_VariantRequestDTO productVariant;
+    private ImportTicketRequestDTO importTicket;
     private Integer quantity;
+    private Double price;
 }

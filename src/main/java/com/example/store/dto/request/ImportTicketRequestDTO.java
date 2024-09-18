@@ -16,6 +16,6 @@ public class ImportTicketRequestDTO  {
     private String code;
     private Integer quantity;
     private Boolean isStatus;
-    private List<ImportTicket_ProductRequestDTO> importTicketProductRequestDTOs;
-    private List<SupplierRequestDTO> supplierRequestDTOs;
+    private List<ImportTicket_ProductRequestDTO> importTicketProducts;
+    private SupplierRequestDTO supplier;
 }

@@ -115,12 +115,11 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ServiceResponseDTO<ProductsResponseDTO> updateQuantity(UUID productID, Integer quantity) {
-        Products products = productsRepository.findById(productID).orElseThrow(() -> new ApiRequestException("Product not found"));
-        products.setQuantity(quantity);
-        productsRepository.save(products);
-        ProductsResponseDTO productsResponseDTO = new ProductsResponseDTO(products);
-        return ServiceResponseDTO.success(HttpStatus.OK, productsResponseDTO);
+    public Boolean updateQuantity(UUID productID, Integer quantity) {
+        Products product = productsRepository.findById(productID).orElseThrow(() -> new ApiRequestException("Product not found"));
+        product.setQuantity(product.getQuantity() != null? product.getQuantity() + quantity : quantity);
+        productsRepository.save(product);
+        return true;
     }
 
 }

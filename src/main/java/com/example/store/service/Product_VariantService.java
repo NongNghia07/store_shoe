@@ -5,6 +5,7 @@ import com.example.store.dto.request.ImportTicket_ProductRequestDTO;
 import com.example.store.dto.request.Product_VariantRequestDTO;
 import com.example.store.dto.response.Product_VariantsResponseDTO;
 import com.example.store.dto.response.util.ServiceResponseDTO;
+import com.example.store.entity.ImportTicket_Product;
 import com.example.store.entity.Products;
 
 import java.util.List;
@@ -19,6 +20,6 @@ public interface Product_VariantService {
     ServiceResponseDTO<List<Product_VariantsResponseDTO>> findAll();
     ServiceResponseDTO<List<Product_VariantsResponseDTO>> findAllByProduct_Id(UUID productID);
     List<Product_VariantsResponseDTO> updatePriceProductBase(UUID productID, double changePrice);
-    Map<String, Object> addQuantity(List<ImportTicket_ProductRequestDTO> iPTProductRequestDTOs);
+    Map<String, Object> addQuantity(List<ImportTicket_Product> importTicketProducts);
     Map<String, Object> sellQuantity(List<Bill_ProductRequestDTO> bill_ProductRequestDTOs);
 }

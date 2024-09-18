@@ -1,6 +1,7 @@
 package com.example.store.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import lombok.*;
@@ -57,9 +58,9 @@ public class Products implements Serializable {
     @Column(name = "image_url")
     private String imageURL;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
+    @JsonIgnore
     private Categories category;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")

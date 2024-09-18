@@ -54,7 +54,7 @@ public class Product_Variants implements Serializable {
     @Column(name = "status")
     private Boolean status = true;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "product_ID")
     @JsonIgnore
     private Products product;
