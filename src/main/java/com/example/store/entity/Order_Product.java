@@ -22,8 +22,11 @@ public class Order_Product implements Serializable {
     @Column(name = "quantity")
     private Integer quantity;
 
-    @Column(name = "price")
-    private Double price;
+    @Column(name = "unit_price")
+    private Double unitPrice;
+
+    @Column(name = "total_price")
+    private Double totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("variantID")

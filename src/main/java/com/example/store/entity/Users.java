@@ -1,5 +1,6 @@
 package com.example.store.entity;
 
+import com.example.store.enums.CustomerLevel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -51,7 +52,8 @@ public class Users implements Serializable {
     private Double tax;
 
     @Column(name = "level")
-    private String level;
+    @Enumerated(EnumType.STRING)
+    private CustomerLevel level;
 
     @Column(name = "creator")
     private Integer creator;
@@ -77,10 +79,6 @@ public class Users implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
     private Set<Order> orders;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    @JsonIgnore
-    private Set<Bill> bills;
 
     @PrePersist
     public void prePersist() {

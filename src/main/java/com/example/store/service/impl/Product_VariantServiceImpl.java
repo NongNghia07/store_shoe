@@ -1,11 +1,10 @@
 package com.example.store.service.impl;
 
-import com.example.store.dto.request.Bill_ProductRequestDTO;
-import com.example.store.dto.request.ImportTicket_ProductRequestDTO;
 import com.example.store.dto.request.Product_VariantRequestDTO;
 import com.example.store.dto.response.Product_VariantsResponseDTO;
 import com.example.store.dto.response.util.ServiceResponseDTO;
 import com.example.store.entity.ImportTicket_Product;
+import com.example.store.entity.Order_Product;
 import com.example.store.entity.Product_Variants;
 import com.example.store.entity.Products;
 import com.example.store.exception.ApiRequestException;
@@ -133,14 +132,17 @@ public class Product_VariantServiceImpl implements Product_VariantService {
     }
 
     @Override
-    public Map<String, Object> addQuantity(List<ImportTicket_Product> importTicketProducts) {
+    public Map<String, Object> addQuantity(List<ImportTicket_Product> importTicketProducts, Set<Order_Product> orderProducts) {
         try {
             Map<UUID, Integer> variantQuantityMap = new HashMap<>();
-            importTicketProducts.forEach(p -> variantQuantityMap.put(p.getId().getVariantID(), p.getQuantity()));
+            if(importTicketProducts != null){
+                importTicketProducts.forEach(p -> variantQuantityMap.put(p.getId().getVariantID(), p.getQuantity()));
+            }else {
+                orderProducts.forEach(p -> variantQuantityMap.put(p.getId().getVariantID(), p.getQuantity()));
+            }
             Map<String, Object> map = updateQuantity(variantQuantityMap, true);
             @SuppressWarnings("unchecked") List<Product_Variants> productVariants = (List<Product_Variants>) map.get("productVariants");
-            AtomicInteger atomicInteger = (AtomicInteger) map.get("totalQuantity");
-            Integer totalQuantity = atomicInteger.get();
+            Integer totalQuantity = (Integer) map.get("totalQuantity");
             product_VariantRepository.saveAll(productVariants);
             return returnTotalQuantity(productVariants.get(0).getProduct().getId(), totalQuantity);
         }catch (Exception e){
@@ -149,9 +151,9 @@ public class Product_VariantServiceImpl implements Product_VariantService {
     }
 
     @Override
-    public Map<String, Object> sellQuantity(List<Bill_ProductRequestDTO> bill_ProductRequestDTOs) {
+    public Map<String, Object> sellQuantity(Set<Order_Product> orderProducts) {
         Map<UUID, Integer> productQuantityMap = new HashMap<>();
-        bill_ProductRequestDTOs.forEach(p -> productQuantityMap.put(p.getVariantID(), p.getQuantity()));
+        orderProducts.forEach(o -> productQuantityMap.put(o.getId().getVariantID(), o.getQuantity()));
         Map<String, Object> map = updateQuantity(productQuantityMap, false);
         @SuppressWarnings("unchecked") List<Product_Variants> productVariants = (List<Product_Variants>) map.get("productVariants");
         Integer totalQuantity = (Integer) map.get("totalQuantity");
@@ -185,7 +187,8 @@ public class Product_VariantServiceImpl implements Product_VariantService {
             totalQuantity.addAndGet(quantity);
             productVariants.add(variants);
         });
-        result.put("totalQuantity", totalQuantity);
+        Integer intTotalQuantity = totalQuantity.get();
+        result.put("totalQuantity", intTotalQuantity);
         result.put("productVariants", productVariants);
         return result;
     }

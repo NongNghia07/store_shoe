@@ -3,6 +3,8 @@ package com.example.store.service;
 import com.example.store.dto.request.BillRequestDTO;
 import com.example.store.dto.response.BillResponseDTO;
 import com.example.store.dto.response.util.ServiceResponseDTO;
+import com.example.store.entity.Order;
+import com.example.store.enums.OrderStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -16,7 +18,9 @@ public interface BillService {
 
     ServiceResponseDTO<BillResponseDTO> findById(Long id);
 
-    ServiceResponseDTO<BillResponseDTO> create(BillRequestDTO billRequestTO);
+    Boolean create(List<Order> orders);
+
+    Boolean updateStatus(Order order);
 
     ServiceResponseDTO<BillResponseDTO> update(BillRequestDTO billRequestTO);
 }

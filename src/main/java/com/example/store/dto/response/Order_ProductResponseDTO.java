@@ -15,10 +15,10 @@ public class Order_ProductResponseDTO {
     private UUID orderID;
     private UUID variantID;
     private String productName;
-    private Double productPrice;
+    private Double unitPrice;
     private String productImageURL;
     private Integer quantity;
-    private Integer productQuantity;
+    private double totalPrice;
 
     public Order_ProductResponseDTO(Order_Product order_product) {
         if(order_product.getId().getOrderID() != null)
@@ -28,7 +28,6 @@ public class Order_ProductResponseDTO {
         this.productImageURL = order_product.getProductVariant().getImageUrl();
         this.productName = order_product.getProductVariant().getProduct().getName();
         this.quantity = order_product.getQuantity();
-        this.productQuantity = order_product.getProductVariant().getQuantity();
-        this.productPrice = order_product.getProductVariant().getPrice();
+        this.unitPrice = order_product.getProductVariant().getPrice();
     }
 }

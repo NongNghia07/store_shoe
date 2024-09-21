@@ -1,5 +1,6 @@
 package com.example.store.entity;
 
+import com.example.store.enums.BillStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,7 +11,6 @@ import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -24,11 +24,17 @@ public class Bill implements Serializable {
     @Column(columnDefinition = "CHAR(36)")
     private UUID id;
 
-    @Column(name = "quantity")
-    private Integer quantity;
+    @Column(name = "totalAmount")
+    private Double totalAmount;
 
-    @Column(name = "price")
-    private Double price;
+    @Column(name = "tax_amount")
+    private Double taxAmount;
+
+    @Column(name = "discount")
+    private Double discount;
+
+    @Column(name = "net_amount")
+    private Double netAmount;
 
     @Column(name = "creator")
     private Integer creator;
@@ -36,28 +42,17 @@ public class Bill implements Serializable {
     @Column(name = "create_date")
     private LocalDateTime createDate;
 
-    @Column(name = "updater")
-    private Integer updater;
+    @Column(name = "payment_status")
+    private String paymentStatus;
 
-    @Column(name = "update_date")
-    private LocalDateTime updateDate;
-
-    @Column(name = "is_status")
-    private Boolean isStatus;
+    @Column(name = "status")
+    @Enumerated(EnumType.STRING)
+    private BillStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_ID")
+    @JoinColumn(name = "order_ID")
     @JsonIgnore
-    private Users user;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vouchers_ID")
-    @JsonIgnore
-    private Vouchers voucher;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "bill")
-    @JsonIgnore
-    private Set<Bill_Product> bill_products;
+    private Order order;
 
     @PrePersist
     public void prePersist() {

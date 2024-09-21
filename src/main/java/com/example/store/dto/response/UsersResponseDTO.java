@@ -3,6 +3,7 @@ package com.example.store.dto.response;
 import com.example.store.entity.Bill;
 import com.example.store.entity.Order;
 import com.example.store.entity.Users;
+import com.example.store.enums.CustomerLevel;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ public class UsersResponseDTO {
     private LocalDateTime dateOfBirth;
     private Integer CCCD;
     private Double tax;
-    private String level;
+    private CustomerLevel level;
     private Integer creator;
     private LocalDateTime createDate;
     private String imageURL;
@@ -55,8 +56,6 @@ public class UsersResponseDTO {
         this.role = new RoleResponseDTO(user.getRole());
         if(!user.getOrders().isEmpty())
             this.orders = convertOrders(user.getOrders());
-        if(!user.getBills().isEmpty())
-            this.bills = convertBills(user.getBills());
     }
 
     private Set<OrderResponseDTO> convertOrders(Set<Order> orders){

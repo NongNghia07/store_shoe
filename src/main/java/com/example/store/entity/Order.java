@@ -1,5 +1,6 @@
 package com.example.store.entity;
 
+import com.example.store.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
@@ -24,26 +25,24 @@ public class Order implements Serializable {
     @Column(columnDefinition = "CHAR(36)")
     private UUID id;
 
-    @Column(name = "quantity")
-    private Integer quantity;
-
-    @Column(name = "price")
-    private Double price;
+    @Column(name = "total_amount")
+    private Double totalAmount;
 
     @Column(name = "creator")
-    private Integer creator;
+    private String creator;
 
     @Column(name = "create_date", columnDefinition = "TIMESTAMP")
     private LocalDateTime createDate;
 
-    @Column(name = "updater")
-    private Integer updater;
-
-    @Column(name = "update_date", columnDefinition = "TIMESTAMP")
-    private LocalDateTime updateDate;
-
     @Column(name = "status")
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
+
+    @Column(name = "payment_method")
+    private String paymentMethod;
+
+    @Column(name = "delivery_address")
+    private String deliveryAddress;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_ID")

@@ -69,10 +69,6 @@ public class Product_Variants implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "productVariant")
     @JsonIgnore
-    private Set<Bill_Product> billProducts;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "productVariant")
-    @JsonIgnore
     private Set<Cart_Product> cartProducts;
 
     @PrePersist

@@ -2,7 +2,7 @@ package com.example.store.dto.request;
 
 import lombok.*;
 
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -14,8 +14,9 @@ public class OrderRequestDTO {
     private UUID id;
     private Integer quantity;
     private Double price;
-    private Boolean isStatus;
+    private String status;
+    private String deliveryAddress;
     private UsersRequestDTO user;
     private VoucherRequestDTO voucher;
-    private Set<UUID> orderProducts;
+    private List<Order_ProductRequestDTO> order_products;
 }

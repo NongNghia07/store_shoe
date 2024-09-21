@@ -12,10 +12,4 @@ import java.util.UUID;
 @ToString
 public class BillRequestDTO {
     private UUID id;
-    private Integer quantity;
-    private Double price;
-    private Boolean isStatus;
-    private UsersRequestDTO userRequestDTO;
-    private VoucherRequestDTO voucherRequestDTO;
-    private List<Bill_ProductRequestDTO> billProductRequestDTOs;
 }

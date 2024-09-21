@@ -52,12 +52,11 @@ public class ImportTicket_ProductServiceImpl implements ImportTicket_ProductServ
                     importTicketProduct.setImportTicket(import_Ticket); // Gán importTicket vào thực thể
                     Product_Variants productVariant = modelMapper.map(p.getProductVariant(), Product_Variants.class);
                     importTicketProduct.setProductVariant(productVariant); // Gán productVariant
-
                     return importTicketProduct;
                 })
                 .toList();
         List<ImportTicket_Product> savedImportTicketProducts = importTicketProductRepository.saveAll(importTicketProducts);
-        Map<String, Object> map = productVariantService.addQuantity(savedImportTicketProducts);
+        Map<String, Object> map = productVariantService.addQuantity(savedImportTicketProducts, null);
         productService.updateQuantity((UUID) map.get("productID"), (Integer) map.get("totalQuantity"));
         Set<ImportTicket_ProductResponseDTO> result = new HashSet<>();
         savedImportTicketProducts.forEach(p -> result.add(new ImportTicket_ProductResponseDTO(p)));

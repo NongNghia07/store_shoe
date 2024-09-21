@@ -1,5 +1,6 @@
 package com.example.store.entity;
 
+import com.example.store.enums.DiscountType;
 import jakarta.persistence.*;
 
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -22,20 +24,33 @@ public class Vouchers implements Serializable {
     @Column(columnDefinition = "CHAR(36)")
     private UUID id;
 
-    @Column(name = "quantity")
-    private Integer quantity;
-
-    @Column(name = "code")
-    private String code;
-
-    @Column(name = "discout")
-    private String discout;
-
     @Column(name = "type")
-    private Boolean type;
+    @Enumerated(EnumType.STRING)
+    private DiscountType type; // %, số tiền cố định
 
-    @Column(name = "is_status")
-    private Boolean isStatus = false;
+    @Column(name = "value")
+    private Double value;
+
+    @Column(name = "min_purchase_amount")
+    private Double minPurchaseAmount; // Số tiền mua tối thiểu
+
+    @Column(name = "max_discount")
+    private Double maxDiscount; // số tiền giảm tối đa nếu type là %. có thể null
+
+    @Column(name = "usage_limit")
+    private Integer usageLimit;
+
+    @Column(name = "user_limit")
+    private Integer userLimit;
+
+    @Column(name = "start_date")
+    private LocalDateTime startDate;
+
+    @Column(name = "end_date")
+    private LocalDateTime endDate;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     @PrePersist
     public void prePersist() {

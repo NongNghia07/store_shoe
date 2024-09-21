@@ -62,15 +62,6 @@ public class ProductsResponseDTO {
         return importTicketProductDTOs;
     }
 
-    private Set<Bill_ProductResponseDTO> convertBillProductDTOs(Set<Bill_Product> billProducts) {
-        Set<Bill_ProductResponseDTO> billProductDTOs = new HashSet<>();
-        for (Bill_Product billProduct : billProducts) {
-            Bill_ProductResponseDTO billProductDTO = new Bill_ProductResponseDTO(billProduct);
-            billProductDTOs.add(billProductDTO);
-        }
-        return billProductDTOs;
-    }
-
     private Set<Order_ProductResponseDTO> convertOrderProductDTOs(Set<Order_Product> orderProducts) {
         Set<Order_ProductResponseDTO> orderProductDTOs = new HashSet<>();
         for (Order_Product orderProduct : orderProducts) {

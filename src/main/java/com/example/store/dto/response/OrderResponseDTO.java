@@ -1,6 +1,8 @@
 package com.example.store.dto.response;
 
 import com.example.store.entity.*;
+import com.example.store.enums.OrderStatus;
+import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,11 +17,12 @@ import java.util.UUID;
 @ToString
 public class OrderResponseDTO {
     private UUID id;
-    private Integer quantity;
-    private Double price;
-    private Integer creator;
+    private Double totalAmount;
+    private String creator;
     private LocalDateTime createDate;
-    private String status;
+    private OrderStatus status;
+    private String paymentMethod;
+    private String deliveryAddress;
     private UsersResponseDTO userDTO;
     private VoucherResponseDTO voucherDTO;
     private Set<Order_ProductResponseDTO> orderProductDTOs;
@@ -27,8 +30,9 @@ public class OrderResponseDTO {
     public OrderResponseDTO(Order order) {
         if(order.getId() != null)
             this.id = order.getId();
-        this.quantity = order.getQuantity();
-        this.price = order.getPrice();
+        this.totalAmount = order.getTotalAmount();
+        this.paymentMethod = order.getPaymentMethod();
+        this.deliveryAddress  = order.getDeliveryAddress();
         this.creator = order.getCreator();
         this.createDate = order.getCreateDate();
         this.status = order.getStatus();
@@ -36,8 +40,6 @@ public class OrderResponseDTO {
             this.voucherDTO = new VoucherResponseDTO(order.getVoucher());
         if(order.getUser() != null)
             this.userDTO = convertUser(order.getUser());
-        if(!order.getOrder_Products().isEmpty())
-            this.orderProductDTOs = convertBillProductDTOs(order.getOrder_Products());
     }
 
     private UsersResponseDTO convertUser(Users user) {
@@ -49,14 +51,5 @@ public class OrderResponseDTO {
         userDTO.setName(user.getName());
         userDTO.setImageURL(user.getImageURL());
         return userDTO;
-    }
-
-    private Set<Order_ProductResponseDTO> convertBillProductDTOs(Set<Order_Product> orderProducts) {
-        Set<Order_ProductResponseDTO> orderProductDTOs = new HashSet<>();
-        for(Order_Product orderProduct : orderProducts) {
-            Order_ProductResponseDTO orderProductDTO = new Order_ProductResponseDTO(orderProduct);
-            orderProductDTOs.add(orderProductDTO);
-        }
-        return orderProductDTOs;
     }
 }
