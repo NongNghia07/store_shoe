@@ -5,5 +5,5 @@ import com.example.store.dto.response.UsersResponseDTO;
 import com.example.store.dto.response.util.ServiceResponseDTO;
 
 public interface UserService {
-    ServiceResponseDTO<UsersResponseDTO> craete(UsersRequestDTO usersRequestDTO);
+    ServiceResponseDTO<UsersResponseDTO> create(UsersRequestDTO usersRequestDTO);
 }

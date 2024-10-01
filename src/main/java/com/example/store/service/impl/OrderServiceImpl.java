@@ -5,7 +5,6 @@ import com.example.store.dto.request.Order_ProductRequestDTO;
 import com.example.store.dto.response.OrderResponseDTO;
 import com.example.store.dto.response.Order_ProductResponseDTO;
 import com.example.store.dto.response.util.ServiceResponseDTO;
-import com.example.store.entity.Bill;
 import com.example.store.entity.Order;
 import com.example.store.enums.OrderStatus;
 import com.example.store.exception.ApiRequestException;
@@ -26,15 +25,17 @@ public class OrderServiceImpl implements OrderService {
     private final ProductService productService;
     private final Product_VariantService productVariantService;
     private final BillService billService;
+    private final VoucherService voucherService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, Order_ProductService orderProductService, ProductService productService, Product_VariantService productVariantService, BillService billService, ModelMapper modelMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository, Order_ProductService orderProductService, ProductService productService, Product_VariantService productVariantService, BillService billService, VoucherService voucherService, ModelMapper modelMapper) {
         this.orderRepository = orderRepository;
         order_productService = orderProductService;
         this.productService = productService;
         this.productVariantService = productVariantService;
         this.billService = billService;
+        this.voucherService = voucherService;
         this.modelMapper = modelMapper;
     }
 
@@ -43,8 +44,12 @@ public class OrderServiceImpl implements OrderService {
         Order order = modelMapper.map(orderRequestDTO, Order.class);
         order.setCreateDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
-
         order.setTotalAmount(totalAmount(orderRequestDTO.getOrder_products()));
+        if(!voucherService.useVoucher(orderRequestDTO.getVoucher().getId(), order.getTotalAmount(),
+                orderRepository.quantityUserUseVoucher(orderRequestDTO.getUser().getId(), order.getVoucher().getId())))
+        {
+            order.setVoucher(null);
+        }
         Order savedOrder = orderRepository.save(order);
         Set<Order_ProductResponseDTO> savedOrderProductDTO = order_productService.createAll(savedOrder, orderRequestDTO.getOrder_products());
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO(order);

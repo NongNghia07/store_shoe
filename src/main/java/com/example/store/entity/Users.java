@@ -45,6 +45,9 @@ public class Users implements Serializable {
     @Column(name = "date_of_birth")
     private LocalDateTime dateOfBirth;
 
+    @Column(name = "gender")
+    private String gender;
+
     @Column(name = "CCCD")
     private Integer CCCD;
 

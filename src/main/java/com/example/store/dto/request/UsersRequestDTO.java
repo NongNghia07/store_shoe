@@ -14,11 +14,12 @@ import java.util.UUID;
 public class UsersRequestDTO {
     private UUID id;
     private String userName;
-    private String name;
-    private String email;
-    private String phone;
+    private String name; //
+    private String email; //
+    private String phone; //
     private String address;
-    private LocalDateTime dateOfBirth;
+    private String gender; //
+    private LocalDateTime dateOfBirth; //
     private Integer CCCD;
     private Double tax;
     private String level;
