@@ -14,7 +14,6 @@ import java.util.UUID;
 public class VoucherResponseDTO {
     private UUID id;
 
-
     public VoucherResponseDTO(Vouchers vouchers){
         if(vouchers.getId() != null)
             this.id = vouchers.getId();

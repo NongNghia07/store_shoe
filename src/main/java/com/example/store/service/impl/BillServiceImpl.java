@@ -55,7 +55,6 @@ public class BillServiceImpl implements BillService {
         for (Order order : orders) {
             Bill bill = new Bill();
             bill.setOrder(order);
-            bill.setCreateDate(LocalDateTime.now());
             bill.setTotalAmount(order.getTotalAmount());
             bill.setTaxAmount(calculateTax(order.getTotalAmount()));
             bill.setPaymentStatus("paid");

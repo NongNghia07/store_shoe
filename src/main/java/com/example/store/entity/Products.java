@@ -19,11 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "products")
-public class Products implements Serializable {
-    @Id
-    @Column(columnDefinition = "CHAR(36)")
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    private UUID id;
+public class Products extends BaseEntity implements Serializable {
 
     @Column(name = "name")
     private String name;
@@ -43,14 +39,8 @@ public class Products implements Serializable {
     @Column(name = "creator")
     private Integer creator;
 
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
-
     @Column(name = "updater")
     private Integer updater;
-
-    @Column(name = "update_date")
-    private LocalDateTime updateDate;
 
     @Column(name = "is_status")
     private Boolean isStatus;
@@ -66,11 +56,4 @@ public class Products implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "product")
     @JsonIgnore
     private Set<Product_Variants> productVariants;
-
-    @PrePersist
-    public void prePersist() {
-        if (id == null) {
-            id = UUID.randomUUID(); // Gán UUID thủ công trước khi lưu
-        }
-    }
 }

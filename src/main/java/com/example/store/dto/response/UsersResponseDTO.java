@@ -28,7 +28,8 @@ public class UsersResponseDTO {
     private Double tax;
     private CustomerLevel level;
     private Integer creator;
-    private LocalDateTime createDate;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
     private String imageURL;
     private Boolean isStatus = true;
     private RoleResponseDTO role;
@@ -49,7 +50,8 @@ public class UsersResponseDTO {
         this.tax = user.getTax();
         this.level = user.getLevel();
         this.creator = user.getCreator();
-        this.createDate = user.getCreateDate();
+        this.createAt = user.getCreateAt();
+        this.updateAt = user.getUpdateAt();
         this.imageURL = user.getImageURL();
         this.isStatus = user.getIsStatus();
 

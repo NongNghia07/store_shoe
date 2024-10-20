@@ -19,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -63,7 +65,6 @@ public class ProductServiceImpl implements ProductService {
     public ServiceResponseDTO<ProductsResponseDTO> create(ProductsRequestDTO productsRequestDTO) {
         try {
             Products product = modelMapper.map(productsRequestDTO, Products.class);
-            product.setCreateDate(LocalDateTime.now());
             Products savedProduct = productsRepository.save(product);
             List<Product_VariantsResponseDTO> savedVariants = product_VariantService.creates(savedProduct, productsRequestDTO.getProductVariants());
             ProductsResponseDTO productsResponseDTO = new ProductsResponseDTO(savedProduct);
@@ -86,8 +87,6 @@ public class ProductServiceImpl implements ProductService {
                 updatePriceVariant = true;
                 changePrice = productsRequestDTO.getPrice() - oldProducts.getPrice();
             }
-            newProduct.setCreateDate(oldProducts.getCreateDate());
-            newProduct.setUpdateDate(LocalDateTime.now());
             Products savedProduct = productsRepository.save(newProduct);
             ProductsResponseDTO productsResponseDTO = new ProductsResponseDTO(savedProduct);
             if(updatePriceVariant){
@@ -115,9 +114,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Boolean updateQuantity(UUID productID, Integer quantity) {
+    public Boolean updateQuantity(UUID productID, Integer quantity, Boolean isAdd) {
         Products product = productsRepository.findById(productID).orElseThrow(() -> new ApiRequestException("Product not found"));
-        product.setQuantity(product.getQuantity() != null? product.getQuantity() + quantity : quantity);
+        product.setQuantity(product.getQuantity() != null? product.getQuantity() + (isAdd? quantity : (quantity * -1)) : quantity);
         productsRepository.save(product);
         return true;
     }

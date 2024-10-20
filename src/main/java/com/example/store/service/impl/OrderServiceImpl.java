@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -27,9 +28,10 @@ public class OrderServiceImpl implements OrderService {
     private final BillService billService;
     private final VoucherService voucherService;
     private final ModelMapper modelMapper;
+    private final Lock lock;
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, Order_ProductService orderProductService, ProductService productService, Product_VariantService productVariantService, BillService billService, VoucherService voucherService, ModelMapper modelMapper) {
+    public OrderServiceImpl(OrderRepository orderRepository, Order_ProductService orderProductService, ProductService productService, Product_VariantService productVariantService, BillService billService, VoucherService voucherService, ModelMapper modelMapper, Lock lock) {
         this.orderRepository = orderRepository;
         order_productService = orderProductService;
         this.productService = productService;
@@ -37,18 +39,17 @@ public class OrderServiceImpl implements OrderService {
         this.billService = billService;
         this.voucherService = voucherService;
         this.modelMapper = modelMapper;
+        this.lock = lock;
     }
 
     @Override
     public ServiceResponseDTO<OrderResponseDTO> create(OrderRequestDTO orderRequestDTO, Boolean isByCustomer) {
         Order order = modelMapper.map(orderRequestDTO, Order.class);
-        order.setCreateDate(LocalDateTime.now());
         order.setStatus(OrderStatus.PENDING);
         order.setTotalAmount(totalAmount(orderRequestDTO.getOrder_products()));
-        if(!voucherService.useVoucher(orderRequestDTO.getVoucher().getId(), order.getTotalAmount(),
-                orderRepository.quantityUserUseVoucher(orderRequestDTO.getUser().getId(), order.getVoucher().getId())))
-        {
-            order.setVoucher(null);
+        if(orderRequestDTO.getVoucher() != null){
+            voucherService.useVoucher(orderRequestDTO.getVoucher().getId(), order.getTotalAmount(),
+                    orderRepository.quantityUserUseVoucher(orderRequestDTO.getUser().getId(), order.getVoucher().getId()));
         }
         Order savedOrder = orderRepository.save(order);
         Set<Order_ProductResponseDTO> savedOrderProductDTO = order_productService.createAll(savedOrder, orderRequestDTO.getOrder_products());
@@ -71,9 +72,11 @@ public class OrderServiceImpl implements OrderService {
                 order.setStatus(status);
                 orders.add(order);
             }
-            List<Order> savedOrder = orderRepository.saveAll(orders);
             if(status == OrderStatus.PROCESSING || status == OrderStatus.RETURNED || status == OrderStatus.CANCELLED)
-                updateQuantityProduct(savedOrder, status);
+                if(!updateQuantityProduct(orders, status)){
+                    throw new ApiRequestException("Out of stock");
+                }
+            List<Order> savedOrder = orderRepository.saveAll(orders);
             if(status == OrderStatus.COMPLETED) billService.create(savedOrder); // create bill
             Set<OrderResponseDTO> orderResponseDTOs = new HashSet<>();
             for (Order order : savedOrder) {
@@ -93,15 +96,23 @@ public class OrderServiceImpl implements OrderService {
         return totalAmount;
     }
 
-    private void updateQuantityProduct(List<Order> orders, OrderStatus status){
-        for (Order order : orders) {
-            Map<String, Object> map = new HashMap<>();
-            if(status == OrderStatus.PROCESSING){
-                map = productVariantService.sellQuantity(order.getOrder_Products());
-            }else {
-                map = productVariantService.addQuantity(null, order.getOrder_Products());
+    // xử lý đồng bộ
+    private boolean updateQuantityProduct(List<Order> orders, OrderStatus status){
+        try {
+            lock.lock();
+            for (Order order : orders) {
+                Map<String, Object> map = new HashMap<>();
+                if(status == OrderStatus.PROCESSING){
+                    map = productVariantService.sellQuantity(order.getOrder_Products());
+                    productService.updateQuantity((UUID) map.get("productID"), (Integer) map.get("totalQuantity"), false);
+                }else {
+                    map = productVariantService.addQuantity(null, order.getOrder_Products());
+                    productService.updateQuantity((UUID) map.get("productID"), (Integer) map.get("totalQuantity"), true);
+                }
             }
-            productService.updateQuantity((UUID) map.get("productID"), (Integer) map.get("totalQuantity"));
+            return true;
+        }finally {
+            lock.unlock();
         }
     }
 

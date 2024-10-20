@@ -21,11 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class Users implements Serializable {
-    @Id
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(columnDefinition = "CHAR(36)")
-    private UUID id;
+public class Users extends BaseEntity implements Serializable {
 
     @Column(name = "user_name")
     private String userName;
@@ -61,9 +57,6 @@ public class Users implements Serializable {
     @Column(name = "creator")
     private Integer creator;
 
-    @Column(name = "create_Date")
-    private LocalDateTime createDate;
-
     @Column(name = "image")
     private String imageURL;
 
@@ -83,10 +76,4 @@ public class Users implements Serializable {
     @JsonIgnore
     private Set<Order> orders;
 
-    @PrePersist
-    public void prePersist() {
-        if (id == null) {
-            id = UUID.randomUUID(); // Gán UUID thủ công trước khi lưu
-        }
-    }
 }

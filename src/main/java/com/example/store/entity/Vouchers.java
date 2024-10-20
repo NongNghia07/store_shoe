@@ -18,11 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "vouchers")
-public class Vouchers implements Serializable {
-    @Id
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(columnDefinition = "CHAR(36)")
-    private UUID id;
+public class Vouchers extends BaseEntity implements Serializable {
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
@@ -52,10 +48,4 @@ public class Vouchers implements Serializable {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @PrePersist
-    public void prePersist() {
-        if (id == null) {
-            id = UUID.randomUUID(); // Gán UUID thủ công trước khi lưu
-        }
-    }
 }

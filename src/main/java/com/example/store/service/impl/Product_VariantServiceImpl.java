@@ -182,7 +182,10 @@ public class Product_VariantServiceImpl implements Product_VariantService {
             if(addQuantity) {
                 variants.setQuantity(variants.getQuantity()!=null? variants.getQuantity() + quantity : quantity);
             }else {
-                variants.setQuantity(variants.getQuantity() - quantity);
+                int calculateQuantity = variants.getQuantity() - quantity;
+                if(calculateQuantity < 0)
+                    throw new ApiRequestException("Out of stock.");
+                variants.setQuantity(calculateQuantity);
             }
             totalQuantity.addAndGet(quantity);
             productVariants.add(variants);

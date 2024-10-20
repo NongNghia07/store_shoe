@@ -18,8 +18,8 @@ import java.util.UUID;
 public class OrderResponseDTO {
     private UUID id;
     private Double totalAmount;
-    private String creator;
-    private LocalDateTime createDate;
+    private LocalDateTime createAt;
+    private LocalDateTime updateAt;
     private OrderStatus status;
     private String paymentMethod;
     private String deliveryAddress;
@@ -33,8 +33,8 @@ public class OrderResponseDTO {
         this.totalAmount = order.getTotalAmount();
         this.paymentMethod = order.getPaymentMethod();
         this.deliveryAddress  = order.getDeliveryAddress();
-        this.creator = order.getCreator();
-        this.createDate = order.getCreateDate();
+        this.createAt = order.getCreateAt();
+        this.updateAt = order.getUpdateAt();
         this.status = order.getStatus();
         if(order.getVoucher() != null)
             this.voucherDTO = new VoucherResponseDTO(order.getVoucher());

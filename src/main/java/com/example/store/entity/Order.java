@@ -19,20 +19,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "`order`")
-public class Order implements Serializable {
-    @Id
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(columnDefinition = "CHAR(36)")
-    private UUID id;
+public class Order extends BaseEntity implements Serializable {
 
     @Column(name = "total_amount")
     private Double totalAmount;
-
-    @Column(name = "creator")
-    private String creator;
-
-    @Column(name = "create_date", columnDefinition = "TIMESTAMP")
-    private LocalDateTime createDate;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -58,10 +48,4 @@ public class Order implements Serializable {
     @JsonIgnore
     private Set<Order_Product> order_Products;
 
-    @PrePersist
-    public void prePersist() {
-        if (id == null) {
-            id = UUID.randomUUID(); // Gán UUID thủ công trước khi lưu
-        }
-    }
 }

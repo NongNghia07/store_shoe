@@ -18,11 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "bill")
-public class Bill implements Serializable {
-    @Id
-    @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(columnDefinition = "CHAR(36)")
-    private UUID id;
+public class Bill extends BaseEntity implements Serializable {
 
     @Column(name = "totalAmount")
     private Double totalAmount;
@@ -36,12 +32,6 @@ public class Bill implements Serializable {
     @Column(name = "net_amount")
     private Double netAmount;
 
-    @Column(name = "creator")
-    private Integer creator;
-
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
-
     @Column(name = "payment_status")
     private String paymentStatus;
 
@@ -53,11 +43,4 @@ public class Bill implements Serializable {
     @JoinColumn(name = "order_ID")
     @JsonIgnore
     private Order order;
-
-    @PrePersist
-    public void prePersist() {
-        if (id == null) {
-            id = UUID.randomUUID(); // Gán UUID thủ công trước khi lưu
-        }
-    }
 }
