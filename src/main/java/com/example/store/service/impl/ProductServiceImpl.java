@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -62,11 +63,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ServiceResponseDTO<ProductsResponseDTO> create(ProductsRequestDTO productsRequestDTO) {
         try {
             Products product = modelMapper.map(productsRequestDTO, Products.class);
             Products savedProduct = productsRepository.save(product);
-            List<Product_VariantsResponseDTO> savedVariants = product_VariantService.creates(savedProduct, productsRequestDTO.getProductVariants());
+            List<Product_VariantsResponseDTO> savedVariants = product_VariantService.createAll(savedProduct, productsRequestDTO.getProductVariants());
             ProductsResponseDTO productsResponseDTO = new ProductsResponseDTO(savedProduct);
             Set<Product_VariantsResponseDTO> setProduct_VariantsResponseDTO = new LinkedHashSet<>(savedVariants);
             productsResponseDTO.setProductVariantsResponseDTOs(setProduct_VariantsResponseDTO);
@@ -77,6 +79,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ServiceResponseDTO<ProductsResponseDTO> update(ProductsRequestDTO productsRequestDTO) {
         try {
             Products oldProducts = productsRepository.findById(productsRequestDTO.getId()).orElseThrow(() -> new ApiRequestException("product not found"));

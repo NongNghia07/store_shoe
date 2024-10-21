@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.UUID;
 
 @Repository
-public interface CartProductRepository extends JpaRepository<Cart_Product, UUID> {
+public interface Cart_ProductRepository extends JpaRepository<Cart_Product, UUID> {
     List<Cart_Product> findByCartId(UUID cartId);
 }

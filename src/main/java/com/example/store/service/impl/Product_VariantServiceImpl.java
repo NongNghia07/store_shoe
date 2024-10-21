@@ -15,6 +15,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -34,7 +35,7 @@ public class Product_VariantServiceImpl implements Product_VariantService {
     }
 
     @Override
-    public List<Product_VariantsResponseDTO> creates(Products products, List<Product_VariantRequestDTO> product_VariantRequestDTOs) {
+    public List<Product_VariantsResponseDTO> createAll(Products products, List<Product_VariantRequestDTO> product_VariantRequestDTOs) {
         try {
             List<Product_Variants> product_Variants = product_VariantRequestDTOs.stream().map(variant -> modelMapper.map(variant, Product_Variants.class)).toList();
             for (Product_Variants variant : product_Variants) {
@@ -55,6 +56,7 @@ public class Product_VariantServiceImpl implements Product_VariantService {
     }
 
     @Override
+    @Transactional
     public ServiceResponseDTO<Product_VariantsResponseDTO> update(Product_VariantRequestDTO product_VariantRequestDTO) {
         Product_Variants product_Variant = product_VariantRepository.findById(product_VariantRequestDTO.getId())
                 .orElseThrow(() -> new ApiRequestException("Product variant not found"));
@@ -103,6 +105,7 @@ public class Product_VariantServiceImpl implements Product_VariantService {
     }
 
     @Override
+    @Transactional
     public List<Product_VariantsResponseDTO> updatePriceProductBase(UUID productID, double changePrice) {
         try {
             List<Product_Variants> productVariants = product_VariantRepository.findByProduct_Id(productID);

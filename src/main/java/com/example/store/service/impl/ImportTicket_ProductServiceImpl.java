@@ -13,6 +13,7 @@ import com.example.store.service.Product_VariantService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -37,6 +38,7 @@ public class ImportTicket_ProductServiceImpl implements ImportTicket_ProductServ
 
     // Xử lý đồng bộ
     @Override
+    @Transactional
     public Set<ImportTicket_ProductResponseDTO> createAll(Import_Ticket import_Ticket, List<ImportTicket_ProductRequestDTO> importTicket_ProductRequestDTOs) {
         try {
             lock.lock();

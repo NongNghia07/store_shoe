@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public interface Product_VariantService {
-    List<Product_VariantsResponseDTO> creates(Products products, List<Product_VariantRequestDTO> product_VariantRequestDTO);
+    List<Product_VariantsResponseDTO> createAll(Products products, List<Product_VariantRequestDTO> product_VariantRequestDTO);
     ServiceResponseDTO<Product_VariantsResponseDTO> update(Product_VariantRequestDTO product_VariantRequestDTO);
     Boolean delete(List<UUID> product_VariantIds);
     ServiceResponseDTO<Product_VariantsResponseDTO> findById(UUID productID);

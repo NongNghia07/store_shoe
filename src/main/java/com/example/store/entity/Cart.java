@@ -3,9 +3,7 @@ package com.example.store.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
@@ -13,7 +11,8 @@ import java.io.Serializable;
 import java.util.Set;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -23,15 +22,6 @@ public class Cart implements Serializable {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(columnDefinition = "CHAR(36)")
     private UUID id;
-
-    @Column(name = "price")
-    private Double price;
-
-    @Column(name = "quantity")
-    private Integer quantity;
-
-    @Column(name = "is_status")
-    private Boolean isStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

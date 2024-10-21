@@ -3,7 +3,6 @@ package com.example.store.service;
 import com.example.store.dto.request.CategoriesRequestDTO;
 import com.example.store.dto.response.CategoriesResponseDTO;
 import com.example.store.dto.response.util.ServiceResponseDTO;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 

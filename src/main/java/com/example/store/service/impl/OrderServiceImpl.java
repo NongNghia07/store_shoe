@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -43,6 +44,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public ServiceResponseDTO<OrderResponseDTO> create(OrderRequestDTO orderRequestDTO, Boolean isByCustomer) {
         Order order = modelMapper.map(orderRequestDTO, Order.class);
         order.setStatus(OrderStatus.PENDING);
@@ -60,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
 
     // Tạo bill
     @Override
+    @Transactional
     public ServiceResponseDTO<Set<OrderResponseDTO>> updateOrderStatus(List<UUID> ids, String toStatus) {
         try {
             List<Order> orders = new ArrayList<>();
