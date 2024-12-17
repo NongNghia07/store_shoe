@@ -23,7 +23,6 @@ public class Price_HistoryResponseDTO {
             this.id = price_History.getId();
         this.oldPrice = price_History.getOldPrice();
         this.newPrice = price_History.getNewPrice();
-        this.changeDate = price_History.getChangeDate();
         this.product_Variants = new Product_VariantsResponseDTO(price_History.getProductVariant());
     }
 }

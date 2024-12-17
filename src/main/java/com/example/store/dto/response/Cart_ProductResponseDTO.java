@@ -22,15 +22,10 @@ public class Cart_ProductResponseDTO {
     private String productImageURL;
 
     public Cart_ProductResponseDTO(Cart_Product cart_product) {
-        if(cart_product.getId().getCartID() != null)
-            this.cartID = cart_product.getId().getCartID();
-        if(cart_product.getId().getVariantID() != null)
-            this.variantID = cart_product.getId().getVariantID();
+
         this.productQuantity = cart_product.getProductVariant().getQuantity();
-        this.productStatus = cart_product.getProductVariant().getStatus();
         this.productImageURL = cart_product.getProductVariant().getImageUrl();
         this.quantity = cart_product.getQuantity();
-        this.productName = cart_product.getProductVariant().getProduct().getName();
         this.productPrice = cart_product.getProductVariant().getPrice();
     }
 }

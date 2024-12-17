@@ -17,10 +17,10 @@ import java.util.UUID;
 @EqualsAndHashCode
 public class Order_ProductKey implements Serializable {
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "variant_ID", columnDefinition = "CHAR(36)")
-    private UUID variantID;
+    @Column(name = "variant_Id", columnDefinition = "CHAR(36)")
+    private UUID variantId;
 
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    @Column(name = "order_ID", columnDefinition = "CHAR(36)")
-    private UUID orderID;
+    @Column(name = "order_Id", columnDefinition = "CHAR(36)")
+    private UUID orderId;
 }

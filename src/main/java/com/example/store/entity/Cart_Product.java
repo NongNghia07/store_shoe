@@ -18,18 +18,16 @@ public class Cart_Product implements Serializable {
     @EmbeddedId
     private Cart_ProductKey id;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("variantID")
-//    @JoinColumn(name = "variant_ID")
+    @MapsId("variantId")
     @JsonIgnore
     private Product_Variants productVariant;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("cartID")
-//    @JoinColumn(name = "cart_ID")
+    @MapsId("cartId")
     @JsonIgnore
     private Cart cart;
 }

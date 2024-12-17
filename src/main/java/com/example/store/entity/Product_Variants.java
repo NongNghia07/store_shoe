@@ -7,7 +7,6 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 
@@ -18,44 +17,29 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity
 @Table(name = "product_variants")
-public class Product_Variants implements Serializable {
+public class Product_Variants extends BaseEntity implements Serializable {
     @Id
     @Column(columnDefinition = "CHAR(36)")
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private Double price;
 
-    @Column(name = "size")
+    @Column(name = "size", nullable = false)
     private String size;
 
-    @Column(name = "color")
-    private String color;
-
-    @Column(name = "creator")
-    private Integer creator;
-
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
-
-    @Column(name = "updater")
-    private Integer updater;
-
-    @Column(name = "update_date")
-    private LocalDateTime updateDate;
-
-    @Column(name = "image_url")
+    @Column(name = "image_url", nullable = true)
     private String imageUrl;
 
-    @Column(name = "status")
-    private Boolean status = true;
+    @Column(name = "is_status", nullable = false)
+    private Boolean isStatus;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "product_ID")
+    @JoinColumn(name = "product_Id", nullable = false)
     @JsonIgnore
     private Products product;
 

@@ -16,11 +16,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class ImportTicket_ProductKey implements Serializable {
-    @Column(name = "importTicket_ID", columnDefinition = "CHAR(36)")
+    @Column(name = "importTicket_Id", columnDefinition = "CHAR(36)")
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    private UUID importTicketID;
+    private UUID importTicketId;
 
-    @Column(name = "variant_ID", columnDefinition = "CHAR(36)")
+    @Column(name = "variant_Id", columnDefinition = "CHAR(36)")
     @JdbcTypeCode(SqlTypes.VARCHAR)
-    private UUID variantID;
+    private UUID variantId;
 }

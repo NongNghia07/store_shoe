@@ -22,9 +22,8 @@ public class SupplierServiceImpl implements SupplierService {
     @Override
     public ServiceResponseDTO<SupplierResponseDTO> create(SupplierRequestDTO supplierRequestDTO) {
         Supplier supplier = new Supplier();
-        supplier.setName(supplierRequestDTO.getName());
         supplierRepository.save(supplier);
         SupplierResponseDTO supplierResponseDTO = new SupplierResponseDTO(supplier);
-        return ServiceResponseDTO.success(HttpStatus.OK, supplierResponseDTO);
+        return ServiceResponseDTO.success(HttpStatus.OK,"", supplierResponseDTO);
     }
 }

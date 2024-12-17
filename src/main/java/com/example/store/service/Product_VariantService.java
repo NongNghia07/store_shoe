@@ -5,6 +5,7 @@ import com.example.store.dto.response.Product_VariantsResponseDTO;
 import com.example.store.dto.response.util.ServiceResponseDTO;
 import com.example.store.entity.ImportTicket_Product;
 import com.example.store.entity.Order_Product;
+import com.example.store.entity.Product_Variants;
 import com.example.store.entity.Products;
 
 import java.util.List;
@@ -22,4 +23,5 @@ public interface Product_VariantService {
     List<Product_VariantsResponseDTO> updatePriceProductBase(UUID productID, double changePrice);
     Map<String, Object> addQuantity(List<ImportTicket_Product> importTicketProducts, Set<Order_Product> orderProducts);
     Map<String, Object> sellQuantity(Set<Order_Product> orderProducts);
+    List<Product_Variants> createAllByExcel(List<Product_Variants> productVariants);
 }

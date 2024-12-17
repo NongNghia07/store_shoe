@@ -3,49 +3,45 @@ package com.example.store.entity;
 import com.example.store.enums.DiscountType;
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import lombok.*;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.UUID;
+import java.time.Instant;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "vouchers")
+@Table(name = "vouchers", uniqueConstraints = {@UniqueConstraint(columnNames = "value")})
 public class Vouchers extends BaseEntity implements Serializable {
 
-    @Column(name = "type")
+    @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)
-    private DiscountType type; // %, số tiền cố định
+    private DiscountType type; // %, fixed amount
 
-    @Column(name = "value")
-    private Double value;
+    @Column(name = "value", nullable = false, unique = true)
+    private Double value; // Value reduction
 
-    @Column(name = "min_purchase_amount")
-    private Double minPurchaseAmount; // Số tiền mua tối thiểu
+    @Column(name = "min_purchase_amount", nullable = true)
+    private Double minPurchaseAmount; // Minimum purchase amount
 
-    @Column(name = "max_discount")
-    private Double maxDiscount; // số tiền giảm tối đa nếu type là %. có thể null
+    @Column(name = "max_discount", nullable = true)
+    private Double maxDiscount; // Maximum discount amount if type is %
 
-    @Column(name = "usage_limit")
-    private Integer usageLimit;
+    @Column(name = "usage_limit", nullable = true)
+    private Integer usageLimit; // Number of uses
 
-    @Column(name = "user_limit")
-    private Integer userLimit;
+    @Column(name = "user_limit", nullable = true)
+    private Integer userLimit; // Number of times customer can use
 
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private Instant startDate; // start date
 
-    @Column(name = "end_date")
-    private LocalDateTime endDate;
+    @Column(name = "end_date", nullable = true)
+    private Instant endDate; // end date
 
-    @Column(name = "is_active")
-    private Boolean isActive;
+    @Column(name = "is_active", nullable = false)
+    private Boolean isActive = true; // active
 
 }

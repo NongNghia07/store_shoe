@@ -15,6 +15,6 @@ public class CartRequestDTO {
     private UsersRequestDTO users;
     private Double price;
     private Integer quantity;
-    private Boolean isStatus;
+    private Boolean isStatus = true;
     private List<Cart_ProductRequestDTO> cartProducts;
 }

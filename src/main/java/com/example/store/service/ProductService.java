@@ -5,7 +5,9 @@ import com.example.store.dto.response.ProductsResponseDTO;
 import com.example.store.dto.response.util.ServiceResponseDTO;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +15,8 @@ public interface ProductService {
     ServiceResponseDTO<List<ProductsResponseDTO>> getAll();
 
     ServiceResponseDTO<PageImpl<ProductsResponseDTO>> getPage(Pageable pageable);
+
+    ServiceResponseDTO<List<ProductsResponseDTO>> createToExcel(InputStream is);
 
     ServiceResponseDTO<ProductsResponseDTO> create(ProductsRequestDTO productsRequestDTO);
 

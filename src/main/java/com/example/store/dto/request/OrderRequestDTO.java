@@ -15,7 +15,6 @@ public class OrderRequestDTO {
     private Integer quantity;
     private Double price;
     private String status;
-    private String deliveryAddress;
     private UsersRequestDTO user;
     private VoucherRequestDTO voucher;
     private List<Order_ProductRequestDTO> order_products;

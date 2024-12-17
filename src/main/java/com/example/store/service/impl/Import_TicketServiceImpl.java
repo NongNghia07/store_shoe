@@ -42,11 +42,10 @@ public class Import_TicketServiceImpl implements Import_TicketService {
             importTicketRequestDTO.getSupplier().setId(supplierDTO.getId());
         }
         Import_Ticket importTicket = modelMapper.map(importTicketRequestDTO, Import_Ticket.class);
-        importTicket.setCreateDate(LocalDateTime.now());
         Import_Ticket savedImportTicket = importTicketRepository.save(importTicket);
         Set<ImportTicket_ProductResponseDTO> importTicketProductResponseDTOs = importTicketProductService.createAll(savedImportTicket, importTicketRequestDTO.getImportTicketProducts());
         ImportTicketResponseDTO result = new ImportTicketResponseDTO(savedImportTicket);
         result.setImportTicketProductDTOs(importTicketProductResponseDTOs);
-        return ServiceResponseDTO.success(HttpStatus.OK, result);
+        return ServiceResponseDTO.success(HttpStatus.OK,"", result);
     }
 }

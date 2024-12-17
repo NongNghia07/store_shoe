@@ -3,46 +3,40 @@ package com.example.store.entity;
 import com.example.store.enums.CustomerLevel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.time.LocalDate;
+import java.util.Collection;
 import java.util.Set;
-import java.util.UUID;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Setter
+@Getter
 @Entity
-@Table(name = "users")
-public class Users extends BaseEntity implements Serializable {
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "userName")})
+public class Users extends BaseEntity implements UserDetails, Serializable {
 
-    @Column(name = "user_name")
+    @Column(name = "user_name", nullable = false, unique = true)
     private String userName;
 
-    @Column(name = "name")
+    @Column(name = "password",  nullable = false)
+    private String password;
+
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "email")
+    @Column(name = "email", nullable = true)
     private String email;
 
-    @Column(name = "phone")
+    @Column(name = "phone", nullable = false)
     private String phone;
 
-    @Column(name = "address")
-    private String address;
-
     @Column(name = "date_of_birth")
-    private LocalDateTime dateOfBirth;
-
-    @Column(name = "gender")
-    private String gender;
+    private LocalDate dateOfBirth;
 
     @Column(name = "CCCD")
     private Integer CCCD;
@@ -54,19 +48,11 @@ public class Users extends BaseEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private CustomerLevel level;
 
-    @Column(name = "creator")
-    private Integer creator;
-
     @Column(name = "image")
     private String imageURL;
 
     @Column(name = "is_status")
-    private Boolean isStatus = true;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
-    @JoinColumn(name = "role_id")
-    private Role role;
+    private Boolean isStatus;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     @JsonIgnore
@@ -76,4 +62,48 @@ public class Users extends BaseEntity implements Serializable {
     @JsonIgnore
     private Set<Order> orders;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles;
+
+    // Implementing UserDetails methods
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Trả về các quyền của người dùng từ các vai trò của họ
+        return roles;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return userName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

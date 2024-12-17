@@ -13,11 +13,8 @@ import java.util.UUID;
 @ToString
 public class ProductsRequestDTO {
     private UUID id;
-    private String name;
     private Integer quantity;
     private Double price;
-    private String brand;
-    private String description;
     private String image_URL;
     private Boolean isStatus = true;
     private List<Product_VariantRequestDTO> productVariants;

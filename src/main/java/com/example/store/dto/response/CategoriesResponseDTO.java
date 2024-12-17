@@ -19,7 +19,6 @@ public class CategoriesResponseDTO {
     public CategoriesResponseDTO(Categories categories) {
         if (categories.getId() != null)
             this.id = categories.getId();
-        this.name = categories.getName();
         this.isStatus = categories.getIsStatus();
     }
 }

@@ -7,12 +7,14 @@ import com.example.store.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/v1/product")
+@RequestMapping("api/v1/")
 public class ProductRestController {
     private final ProductService productService;
 
@@ -25,6 +27,18 @@ public class ProductRestController {
     public ResponseEntity<?> getAll() {
         ServiceResponseDTO<List<ProductsResponseDTO>> productResponseDTOs = productService.getAll();
         return ResponseEntity.ok(productResponseDTOs);
+    }
+
+    @PostMapping("/product/importExcel")
+    public ServiceResponseDTO<?> createToExcel(@RequestParam("file") MultipartFile file) throws Exception{
+        if (file.isEmpty()) {
+            return null;
+        }
+            // Lấy InputStream từ MultipartFile
+            InputStream is = file.getInputStream();
+
+            // Gọi service để xử lý dữ liệu
+            return productService.createToExcel(is);
     }
 
     @PostMapping

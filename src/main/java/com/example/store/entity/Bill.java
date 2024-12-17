@@ -3,44 +3,37 @@ package com.example.store.entity;
 import com.example.store.enums.BillStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import lombok.*;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Getter
+@Setter
 @Table(name = "bill")
 public class Bill extends BaseEntity implements Serializable {
 
-    @Column(name = "totalAmount")
+    @Column(name = "totalAmount", nullable = false) // Không được null
     private Double totalAmount;
 
-    @Column(name = "tax_amount")
+    @Column(name = "tax_amount", nullable = true) // Có thể null
     private Double taxAmount;
 
-    @Column(name = "discount")
+    @Column(name = "discount", nullable = true) // Có thể null
     private Double discount;
 
-    @Column(name = "net_amount")
+    @Column(name = "net_amount", nullable = false) // Không được null
     private Double netAmount;
 
-    @Column(name = "payment_status")
-    private String paymentStatus;
-
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
+    @Column(name = "status", nullable = false) // Không được null
+    @Enumerated(EnumType.STRING) // Lưu trạng thái Bill dưới dạng chuỗi
     private BillStatus status;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "order_ID")
+    @JoinColumn(name = "order_Id", nullable = false) // Không được null
     @JsonIgnore
     private Order order;
+
 }

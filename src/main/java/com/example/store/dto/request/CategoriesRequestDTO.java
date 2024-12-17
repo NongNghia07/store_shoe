@@ -11,6 +11,5 @@ import java.util.UUID;
 @ToString
 public class CategoriesRequestDTO {
     private UUID id;
-    private String name;
     private Boolean isStatus = true;
 }

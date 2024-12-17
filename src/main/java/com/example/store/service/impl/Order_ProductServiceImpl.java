@@ -35,8 +35,8 @@ public class Order_ProductServiceImpl implements Order_ProductService {
         List<Order_Product> orderProducts = orderProductRequestDTOs.stream().map(p -> {
             Order_Product orderProduct = modelMapper.map(p, Order_Product.class);
             Order_ProductKey id = new Order_ProductKey();
-            id.setOrderID(order.getId());
-            id.setVariantID(p.getProductVariant().getId());
+            id.setOrderId(order.getId());
+            id.setVariantId(p.getProductVariant().getId());
             orderProduct.setId(id);
             orderProduct.setOrder(order);
             orderProduct.setTotalPrice(p.getQuantity() * p.getUnitPrice());

@@ -16,5 +16,5 @@ public class Product_VariantRequestDTO {
     private String size;
     private String color;
     private String imageUrl;
-    private Boolean status = true;
+    private Boolean isStatus = true;
 }

@@ -3,6 +3,8 @@ package com.example.store.entity.embeddable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.*;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -14,9 +16,11 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class Cart_ProductKey implements Serializable {
-    @Column(name = "variant_ID", columnDefinition = "CHAR(36)")
-    private UUID variantID;
+    @Column(name = "variant_Id", columnDefinition = "CHAR(36)")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    private UUID variantId;
 
-    @Column(name = "cart_ID", columnDefinition = "CHAR(36)")
-    private UUID cartID;
+    @Column(name = "cart_Id", columnDefinition = "CHAR(36)")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
+    private UUID cartId;
 }

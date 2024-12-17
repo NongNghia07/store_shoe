@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/category")
 public class CategoryRestController {
 
-//    private final CategoriesService categoryService;
-//
-//    @Autowired
-//    public CategoryRestController(CategoriesService categoryService) {
-//        this.categoryService = categoryService;
-//    }
+    private final CategoriesService categoryService;
+
+    @Autowired
+    public CategoryRestController(CategoriesService categoryService) {
+        this.categoryService = categoryService;
+    }
 
 }

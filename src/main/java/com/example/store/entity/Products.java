@@ -1,55 +1,40 @@
 package com.example.store.entity;
 
+import com.example.store.util.AutoGenerateCode;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.UUID;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "products")
+@AutoGenerateCode(prefix = "PRD")
+@Table(name = "products", uniqueConstraints = {@UniqueConstraint(columnNames = {"code"})})
 public class Products extends BaseEntity implements Serializable {
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "code", nullable = false, unique = true)
+    private String code;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "price")
+    @Column(name = "price", nullable = false)
     private Double price;
 
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "brand")
-    private String brand;
-
-    @Column(name = "creator")
-    private Integer creator;
-
-    @Column(name = "updater")
-    private Integer updater;
-
-    @Column(name = "is_status")
+    @Column(name = "is_status", nullable = false)
     private Boolean isStatus;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", nullable = true)
     private String imageURL;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id")
+    @JoinColumn(name = "category_Id", nullable = false)
     @JsonIgnore
     private Categories category;
 

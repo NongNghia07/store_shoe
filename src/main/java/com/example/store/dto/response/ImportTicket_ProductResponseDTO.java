@@ -24,17 +24,8 @@ public class ImportTicket_ProductResponseDTO {
     private String productSize;
 
     public ImportTicket_ProductResponseDTO(ImportTicket_Product importTicket_Product) {
-        if(importTicket_Product.getId() != null){
-            this.variantID = importTicket_Product.getId().getVariantID();
-            this.importTicketID = importTicket_Product.getId().getImportTicketID();
-        }
-        this.productColor = importTicket_Product.getProductVariant().getColor();
-        this.productSize = importTicket_Product.getProductVariant().getSize();
-        this.productName = importTicket_Product.getProductVariant().getProduct().getName();
-        this.productDescription = importTicket_Product.getProductVariant().getProduct().getDescription();
         this.productImageURL = importTicket_Product.getProductVariant().getImageUrl();
         this.quantity = importTicket_Product.getQuantity();
-        this.productCategoryName = importTicket_Product.getProductVariant().getProduct().getCategory().getName();
         this.price = importTicket_Product.getPrice();
     }
 }

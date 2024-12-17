@@ -33,7 +33,7 @@ public class CategoriesServiceImpl implements CategoriesService {
         for (Categories c : categories) {
             categoriesResponseDTOS.add(new CategoriesResponseDTO(c));
         }
-        return ServiceResponseDTO.success(HttpStatus.OK, categoriesResponseDTOS);
+        return ServiceResponseDTO.success(HttpStatus.OK,"", categoriesResponseDTOS);
     }
 
     @Override

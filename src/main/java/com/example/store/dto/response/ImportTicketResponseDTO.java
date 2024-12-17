@@ -30,25 +30,6 @@ public class ImportTicketResponseDTO {
             this.id = importTicket.getId();
         this.code = importTicket.getCode();
         this.quantity = importTicket.getQuantity();
-        this.creator = importTicket.getCreator();
-        this.createDate = importTicket.getCreateDate();
         this.isStatus = importTicket.getIsStatus();
-        this.supplierDTO = convertSupplierDTO(importTicket.getSupplier());
-    }
-
-    private Set<ImportTicket_ProductResponseDTO> convertImportTicketProductDTO(Set<ImportTicket_Product> importTicketProducts){
-        Set<ImportTicket_ProductResponseDTO> importTicketProductDTOs = new HashSet<>();
-        for(ImportTicket_Product importTicketProduct : importTicketProducts){
-            ImportTicket_ProductResponseDTO importTicketProductDTO = new ImportTicket_ProductResponseDTO(importTicketProduct);
-            importTicketProductDTOs.add(importTicketProductDTO);
-        }
-        return importTicketProductDTOs;
-    }
-
-    private SupplierResponseDTO convertSupplierDTO(Supplier supplier){
-        SupplierResponseDTO supplierDTO = new SupplierResponseDTO();
-        supplierDTO.setId(supplier.getId());
-        supplierDTO.setName(supplier.getName());
-        return supplierDTO;
     }
 }

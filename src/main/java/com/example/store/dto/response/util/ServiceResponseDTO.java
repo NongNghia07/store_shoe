@@ -1,5 +1,6 @@
 package com.example.store.dto.response.util;
 
+import com.example.store.util.MessageUtil;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
+
 
 @Getter
 @Setter
@@ -21,16 +23,10 @@ public class ServiceResponseDTO<T> {
     private String message;
     private T data;
 
-    public static <T> ServiceResponseDTO<T> success(HttpStatus status, T data) {
-        return new ServiceResponseDTO<>(status.value(), "success", data);
+    public static <T> ServiceResponseDTO<T> success(HttpStatus status, String messageCode, T data) {
+        // Sử dụng MessageUtil để lấy thông báo đa ngôn ngữ từ messageCode
+        String localizedMessage = MessageUtil.getMessage(messageCode);
+        return new ServiceResponseDTO<>(status.value(), localizedMessage, data);
     }
 
-    public static <T> ServiceResponseDTO<T> error(HttpStatus status, T data) {
-        return new ServiceResponseDTO<>(status.value(), "error", data);
-    }
-
-//    public ServiceResponseDTO<BillDTO> get(){
-//        BillDTO dto = new BillDTO();
-//        return ServiceResponseDTO.success(HttpStatus.OK, dto);
-//    }
 }

@@ -6,6 +6,7 @@ import com.example.store.dto.response.OrderResponseDTO;
 import com.example.store.dto.response.Order_ProductResponseDTO;
 import com.example.store.dto.response.util.ServiceResponseDTO;
 import com.example.store.entity.Order;
+import com.example.store.enums.ErrorStatus;
 import com.example.store.enums.OrderStatus;
 import com.example.store.exception.ApiRequestException;
 import com.example.store.repository.OrderRepository;
@@ -57,7 +58,7 @@ public class OrderServiceImpl implements OrderService {
         Set<Order_ProductResponseDTO> savedOrderProductDTO = order_productService.createAll(savedOrder, orderRequestDTO.getOrder_products());
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO(order);
         orderResponseDTO.setOrderProductDTOs(savedOrderProductDTO);
-        return ServiceResponseDTO.success(HttpStatus.OK, orderResponseDTO);
+        return ServiceResponseDTO.success(HttpStatus.OK,"", orderResponseDTO);
     }
 
     // Tạo bill
@@ -70,14 +71,14 @@ public class OrderServiceImpl implements OrderService {
             for (UUID id : ids) {
                 Order order = orderRepository.findOrderById(id);
                 if(!isEditStatus(order.getStatus(), status)) {
-                    throw new ApiRequestException("Order has not been paid or the customer has not received the goods.");
+                    throw new ApiRequestException("Order has not been paid or the customer has not received the goods.", ErrorStatus.BAD_REQUEST_400);
                 }
                 order.setStatus(status);
                 orders.add(order);
             }
             if(status == OrderStatus.PROCESSING || status == OrderStatus.RETURNED || status == OrderStatus.CANCELLED)
                 if(!updateQuantityProduct(orders, status)){
-                    throw new ApiRequestException("Out of stock");
+                    throw new ApiRequestException("Out of stock", ErrorStatus.BAD_REQUEST_400);
                 }
             List<Order> savedOrder = orderRepository.saveAll(orders);
             if(status == OrderStatus.COMPLETED) billService.create(savedOrder); // create bill
@@ -85,9 +86,9 @@ public class OrderServiceImpl implements OrderService {
             for (Order order : savedOrder) {
                 orderResponseDTOs.add(new OrderResponseDTO(order));
             }
-            return ServiceResponseDTO.success(HttpStatus.OK, orderResponseDTOs);
+            return ServiceResponseDTO.success(HttpStatus.OK,"", orderResponseDTOs);
         }catch (Exception e) {
-            throw new ApiRequestException(e.getMessage());
+            throw new ApiRequestException(e.getMessage(), ErrorStatus.BAD_REQUEST_400);
         }
     }
 

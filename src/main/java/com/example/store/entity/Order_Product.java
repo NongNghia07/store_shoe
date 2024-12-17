@@ -19,24 +19,22 @@ public class Order_Product implements Serializable {
     @EmbeddedId
     private Order_ProductKey id;
 
-    @Column(name = "quantity")
+    @Column(name = "quantity", nullable = false)
     private Integer quantity;
 
-    @Column(name = "unit_price")
+    @Column(name = "unit_price", nullable = false)
     private Double unitPrice;
 
-    @Column(name = "total_price")
+    @Column(name = "total_price", nullable = false)
     private Double totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("variantID")
-//    @JoinColumn(name = "variant_ID")
+    @MapsId("variantId")
     @JsonIgnore
     private Product_Variants productVariant;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapsId("orderID")
-//    @JoinColumn(name = "order_ID")
+    @MapsId("orderId")
     @JsonIgnore
     private Order order;
 }

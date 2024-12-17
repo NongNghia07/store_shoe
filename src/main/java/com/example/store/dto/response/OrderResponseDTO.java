@@ -31,25 +31,9 @@ public class OrderResponseDTO {
         if(order.getId() != null)
             this.id = order.getId();
         this.totalAmount = order.getTotalAmount();
-        this.paymentMethod = order.getPaymentMethod();
-        this.deliveryAddress  = order.getDeliveryAddress();
-        this.createAt = order.getCreateAt();
-        this.updateAt = order.getUpdateAt();
         this.status = order.getStatus();
         if(order.getVoucher() != null)
             this.voucherDTO = new VoucherResponseDTO(order.getVoucher());
-        if(order.getUser() != null)
-            this.userDTO = convertUser(order.getUser());
     }
 
-    private UsersResponseDTO convertUser(Users user) {
-        UsersResponseDTO userDTO = new UsersResponseDTO();
-        userDTO.setId(user.getId());
-        userDTO.setAddress(user.getAddress());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setPhone(user.getPhone());
-        userDTO.setName(user.getName());
-        userDTO.setImageURL(user.getImageURL());
-        return userDTO;
-    }
 }

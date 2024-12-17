@@ -17,17 +17,14 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(name = "categories")
+@Table(name = "categories", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 public class Categories implements Serializable {
     @Id
     @JdbcTypeCode(SqlTypes.VARCHAR)
     @Column(columnDefinition = "CHAR(36)")
     private UUID id;
 
-    @Column(name = "name")
-    private String name;
-
-    @Column(name = "is_status")
+    @Column(name = "is_status", nullable = false)
     private Boolean isStatus;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "category")

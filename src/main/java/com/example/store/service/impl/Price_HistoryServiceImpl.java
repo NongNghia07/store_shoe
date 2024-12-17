@@ -4,6 +4,7 @@ import com.example.store.dto.response.Price_HistoryResponseDTO;
 import com.example.store.dto.response.util.ServiceResponseDTO;
 import com.example.store.entity.Price_History;
 import com.example.store.entity.Product_Variants;
+import com.example.store.enums.ErrorStatus;
 import com.example.store.exception.ApiRequestException;
 import com.example.store.repository.Price_HistoryRepository;
 import com.example.store.service.Price_HistoryService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -29,13 +31,13 @@ public class Price_HistoryServiceImpl implements Price_HistoryService {
             Price_History price_History = new Price_History();
             price_History.setNewPrice(newPrice);
             price_History.setOldPrice(oldPrice);
-            price_History.setChangeDate(LocalDateTime.now());
+            price_History.setChangeDate(Instant.now());
             price_History.setProductVariant(productVariant);
             price_HistoryRepository.save(price_History);
             Price_HistoryResponseDTO responseDTO = new Price_HistoryResponseDTO(price_History);
-            return ServiceResponseDTO.success(HttpStatus.OK, responseDTO);
+            return ServiceResponseDTO.success(HttpStatus.OK,"", responseDTO);
         }catch (Exception e) {
-            throw new ApiRequestException(e.getMessage());
+            throw new ApiRequestException(e.getMessage(), ErrorStatus.BAD_REQUEST_400);
         }
     }
 }

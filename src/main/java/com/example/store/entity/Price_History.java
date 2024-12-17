@@ -7,7 +7,7 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -23,17 +23,20 @@ public class Price_History implements Serializable {
     @Column(columnDefinition = "CHAR(36)")
     private UUID id;
 
-    @Column(name = "old_price")
+    @Column(name = "old_price", nullable = false)
     private double oldPrice;
 
-    @Column(name = "new_price")
+    @Column(name = "new_price", nullable = false)
     private double newPrice;
 
-    @Column(name = "change_date")
-    private LocalDateTime changeDate;
+    @Column(name = "remaining_quantity", nullable = false) //  Số lượng sản phẩm còn lại
+    private Integer remainingQuantity;
+
+    @Column(name = "change_date", nullable = false)
+    private Instant changeDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "variant_ID")
+    @JoinColumn(name = "variant_Id", nullable = false)
     @JsonIgnore
     private Product_Variants productVariant;
 

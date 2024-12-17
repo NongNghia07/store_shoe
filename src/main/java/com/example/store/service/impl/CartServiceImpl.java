@@ -40,7 +40,7 @@ public class CartServiceImpl implements CartService {
         Set<Cart_ProductResponseDTO> savedCartProducts = cart_productService.createAll(savedCart, cartRequestDTO.getCartProducts());
         CartResponseDTO result = new CartResponseDTO(savedCart);
         result.setCartProductDTOs(savedCartProducts);
-        return ServiceResponseDTO.success(HttpStatus.OK, result);
+        return ServiceResponseDTO.success(HttpStatus.OK,"", result);
     }
 
     @Override

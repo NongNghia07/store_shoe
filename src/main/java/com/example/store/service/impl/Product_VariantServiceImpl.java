@@ -7,6 +7,7 @@ import com.example.store.entity.ImportTicket_Product;
 import com.example.store.entity.Order_Product;
 import com.example.store.entity.Product_Variants;
 import com.example.store.entity.Products;
+import com.example.store.enums.ErrorStatus;
 import com.example.store.exception.ApiRequestException;
 import com.example.store.repository.Product_VariantRepository;
 import com.example.store.service.Price_HistoryService;
@@ -39,7 +40,6 @@ public class Product_VariantServiceImpl implements Product_VariantService {
         try {
             List<Product_Variants> product_Variants = product_VariantRequestDTOs.stream().map(variant -> modelMapper.map(variant, Product_Variants.class)).toList();
             for (Product_Variants variant : product_Variants) {
-                variant.setCreateDate(LocalDateTime.now());
                 variant.setProduct(products);
             }
             List<Product_Variants> savedProduct_Variants = product_VariantRepository.saveAll(product_Variants);
@@ -51,7 +51,7 @@ public class Product_VariantServiceImpl implements Product_VariantService {
             }
             return result;
         }catch (Exception e) {
-            throw new ApiRequestException(e.getMessage());
+            throw new ApiRequestException(e.getMessage(), ErrorStatus.BAD_REQUEST_400);
         }
     }
 
@@ -59,9 +59,9 @@ public class Product_VariantServiceImpl implements Product_VariantService {
     @Transactional
     public ServiceResponseDTO<Product_VariantsResponseDTO> update(Product_VariantRequestDTO product_VariantRequestDTO) {
         Product_Variants product_Variant = product_VariantRepository.findById(product_VariantRequestDTO.getId())
-                .orElseThrow(() -> new ApiRequestException("Product variant not found"));
-        if(checkDuplicateSizeAndColor(product_Variant, product_VariantRequestDTO))
-            throw new ApiRequestException("Product variant already exists");
+                .orElseThrow(() -> new ApiRequestException("Product variant not found", ErrorStatus.BAD_REQUEST_400));
+//        if(checkDuplicateSizeAndColor(product_Variant, product_VariantRequestDTO))
+//            throw new ApiRequestException("Product variant already exists");
         Double oldPrice = null;
         if(!product_Variant.getPrice().equals(product_VariantRequestDTO.getPrice())){
             oldPrice = product_Variant.getPrice();
@@ -71,7 +71,7 @@ public class Product_VariantServiceImpl implements Product_VariantService {
         if(oldPrice != null)
             price_HistoryService.create(product_Variant, oldPrice, product_Variant.getPrice());
         Product_VariantsResponseDTO result = new Product_VariantsResponseDTO(product_Variant);
-        return ServiceResponseDTO.success(HttpStatus.OK, result);
+        return ServiceResponseDTO.success(HttpStatus.OK,"", result);
     }
 
     @Override
@@ -81,27 +81,27 @@ public class Product_VariantServiceImpl implements Product_VariantService {
             product_VariantRepository.deleteAll(productVariants);
             return true;
         }catch (Exception e){
-            throw new ApiRequestException(e.getMessage());
+            throw new ApiRequestException(e.getMessage(), ErrorStatus.BAD_REQUEST_400);
         }
     }
 
     @Override
     public ServiceResponseDTO<Product_VariantsResponseDTO> findById(UUID productID) {
-        Product_Variants productVariant = product_VariantRepository.findById(productID).orElseThrow(() -> new ApiRequestException("Product variant not found"));
+        Product_Variants productVariant = product_VariantRepository.findById(productID).orElseThrow(() -> new ApiRequestException("Product variant not found", ErrorStatus.BAD_REQUEST_400));
         Product_VariantsResponseDTO result = new Product_VariantsResponseDTO(productVariant);
-        return ServiceResponseDTO.success(HttpStatus.OK, result);
+        return ServiceResponseDTO.success(HttpStatus.OK,"", result);
     }
 
     @Override
     public ServiceResponseDTO<List<Product_VariantsResponseDTO>> findAll() {
         List<Product_Variants> product_Variants = product_VariantRepository.findAll();
-        return ServiceResponseDTO.success(HttpStatus.OK, convertProductVariantsToProductVariantsResponseDTO(product_Variants));
+        return ServiceResponseDTO.success(HttpStatus.OK,"", convertProductVariantsToProductVariantsResponseDTO(product_Variants));
     }
 
     @Override
     public ServiceResponseDTO<List<Product_VariantsResponseDTO>> findAllByProduct_Id(UUID productID) {
         List<Product_Variants> product_Variants = product_VariantRepository.findByProduct_Id(productID);
-        return ServiceResponseDTO.success(HttpStatus.OK, convertProductVariantsToProductVariantsResponseDTO(product_Variants));
+        return ServiceResponseDTO.success(HttpStatus.OK,"", convertProductVariantsToProductVariantsResponseDTO(product_Variants));
     }
 
     @Override
@@ -116,7 +116,6 @@ public class Product_VariantServiceImpl implements Product_VariantService {
                 // get newPrice (price variant + price change ( newPrice base product - oldPrice base product))
                 Double completePrice = productVariant.getPrice() + changePrice;
                 productVariant.setPrice(completePrice);
-                productVariant.setUpdateDate(LocalDateTime.now());
             }
             product_VariantRepository.saveAll(productVariants);
             for (int i = 0; i < productVariants.size(); i++) {
@@ -130,7 +129,7 @@ public class Product_VariantServiceImpl implements Product_VariantService {
             });
             return result;
         } catch (Exception e) {
-            throw new ApiRequestException(e.getMessage());
+            throw new ApiRequestException(e.getMessage(), ErrorStatus.BAD_REQUEST_400);
         }
     }
 
@@ -139,9 +138,9 @@ public class Product_VariantServiceImpl implements Product_VariantService {
         try {
             Map<UUID, Integer> variantQuantityMap = new HashMap<>();
             if(importTicketProducts != null){
-                importTicketProducts.forEach(p -> variantQuantityMap.put(p.getId().getVariantID(), p.getQuantity()));
+                importTicketProducts.forEach(p -> variantQuantityMap.put(p.getId().getVariantId(), p.getQuantity()));
             }else {
-                orderProducts.forEach(p -> variantQuantityMap.put(p.getId().getVariantID(), p.getQuantity()));
+                orderProducts.forEach(p -> variantQuantityMap.put(p.getId().getVariantId(), p.getQuantity()));
             }
             Map<String, Object> map = updateQuantity(variantQuantityMap, true);
             @SuppressWarnings("unchecked") List<Product_Variants> productVariants = (List<Product_Variants>) map.get("productVariants");
@@ -149,19 +148,24 @@ public class Product_VariantServiceImpl implements Product_VariantService {
             product_VariantRepository.saveAll(productVariants);
             return returnTotalQuantity(productVariants.get(0).getProduct().getId(), totalQuantity);
         }catch (Exception e){
-            throw new ApiRequestException(e.getMessage());
+            throw new ApiRequestException(e.getMessage(), ErrorStatus.BAD_REQUEST_400);
         }
     }
 
     @Override
     public Map<String, Object> sellQuantity(Set<Order_Product> orderProducts) {
         Map<UUID, Integer> productQuantityMap = new HashMap<>();
-        orderProducts.forEach(o -> productQuantityMap.put(o.getId().getVariantID(), o.getQuantity()));
+        orderProducts.forEach(o -> productQuantityMap.put(o.getId().getVariantId(), o.getQuantity()));
         Map<String, Object> map = updateQuantity(productQuantityMap, false);
         @SuppressWarnings("unchecked") List<Product_Variants> productVariants = (List<Product_Variants>) map.get("productVariants");
         Integer totalQuantity = (Integer) map.get("totalQuantity");
         product_VariantRepository.saveAll(productVariants);
         return returnTotalQuantity(productVariants.get(0).getProduct().getId(), totalQuantity);
+    }
+
+    @Override
+    public List<Product_Variants> createAllByExcel(List<Product_Variants> productVariants) {
+        return product_VariantRepository.saveAll(productVariants);
     }
 
     private List<Product_VariantsResponseDTO> convertProductVariantsToProductVariantsResponseDTO(List<Product_Variants> productVariants) {
@@ -178,16 +182,16 @@ public class Product_VariantServiceImpl implements Product_VariantService {
         List<Product_Variants> productVariants = new ArrayList<>();
         AtomicInteger totalQuantity = new AtomicInteger(0);
         variantQuantity.forEach((id, quantity) -> {
-            Product_Variants variants = product_VariantRepository.findById(id).orElseThrow(() -> new ApiRequestException("Variant not found"));
+            Product_Variants variants = product_VariantRepository.findById(id).orElseThrow(() -> new ApiRequestException("Variant not found", ErrorStatus.BAD_REQUEST_400));
             if (!addQuantity && variants.getQuantity() < quantity) {
-                throw new ApiRequestException("Quantity cannot be less than zero.");
+                throw new ApiRequestException("Quantity cannot be less than zero.", ErrorStatus.BAD_REQUEST_400);
             }
             if(addQuantity) {
                 variants.setQuantity(variants.getQuantity()!=null? variants.getQuantity() + quantity : quantity);
             }else {
                 int calculateQuantity = variants.getQuantity() - quantity;
                 if(calculateQuantity < 0)
-                    throw new ApiRequestException("Out of stock.");
+                    throw new ApiRequestException("Out of stock.", ErrorStatus.BAD_REQUEST_400);
                 variants.setQuantity(calculateQuantity);
             }
             totalQuantity.addAndGet(quantity);
@@ -200,8 +204,9 @@ public class Product_VariantServiceImpl implements Product_VariantService {
     }
 
     private Boolean checkDuplicateSizeAndColor(Product_Variants productVariant, Product_VariantRequestDTO productVariantRequestDTO){
-        return productVariant.getSize().equalsIgnoreCase(productVariantRequestDTO.getSize())
-                && productVariant.getColor().equalsIgnoreCase(productVariantRequestDTO.getColor());
+//        return productVariant.getSize().equalsIgnoreCase(productVariantRequestDTO.getSize())
+//                && productVariant.getColor().equalsIgnoreCase(productVariantRequestDTO.getColor());
+        return false;
     }
 
     private Map<String, Object> returnTotalQuantity(UUID productID, Integer totalQuantity){

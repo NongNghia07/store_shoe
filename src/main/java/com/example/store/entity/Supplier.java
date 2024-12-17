@@ -2,23 +2,18 @@ package com.example.store.entity;
 
 import jakarta.persistence.*;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import lombok.*;
 
 import java.io.Serializable;
-import java.util.UUID;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Entity
-@Table(name = "supplier")
+@Table(name = "supplier", uniqueConstraints = {@UniqueConstraint(columnNames = "name")})
 public class Supplier extends BaseEntity implements Serializable {
 
-    @Column(name = "name")
-    private String name;
-
+    @Column(name = "is_status", nullable = false)
+    private Boolean isStatus;
 }

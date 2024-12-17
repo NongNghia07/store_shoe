@@ -49,8 +49,8 @@ public class ImportTicket_ProductServiceImpl implements ImportTicket_ProductServ
 
                         // Tạo khóa phức hợp (composite key)
                         ImportTicket_ProductKey id = new ImportTicket_ProductKey();
-                        id.setImportTicketID(import_Ticket.getId());
-                        id.setVariantID(p.getProductVariant().getId()); // Giả sử p.getProductVariant() không null
+                        id.setImportTicketId(import_Ticket.getId());
+                        id.setVariantId(p.getProductVariant().getId()); // Giả sử p.getProductVariant() không null
 
                         importTicketProduct.setId(id);
 

@@ -38,14 +38,7 @@ public class Product_VariantsResponseDTO {
         this.id = productVariant.getId();
         this.quantity = productVariant.getQuantity();
         this.price = productVariant.getPrice();
-        this.size = productVariant.getSize();
-        this.color = productVariant.getColor();
-        this.creator = productVariant.getCreator();
-        this.createDate = productVariant.getCreateDate();
-        this.updater = productVariant.getUpdater();
-        this.updateDate = productVariant.getUpdateDate();
         this.imageUrl = productVariant.getImageUrl();
-        this.status = productVariant.getStatus();
         if(productVariant.getProduct()!= null)
             this.productResponseDTO = new ProductsResponseDTO(productVariant.getProduct());
     }

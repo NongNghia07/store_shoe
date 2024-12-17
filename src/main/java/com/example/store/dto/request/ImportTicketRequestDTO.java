@@ -13,9 +13,8 @@ import java.util.UUID;
 @NoArgsConstructor
 public class ImportTicketRequestDTO  {
     private UUID id;
-    private String code;
     private Integer quantity;
-    private Boolean isStatus;
+    private Boolean isStatus = true;
     private List<ImportTicket_ProductRequestDTO> importTicketProducts;
     private SupplierRequestDTO supplier;
 }

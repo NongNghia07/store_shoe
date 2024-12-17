@@ -1,12 +1,22 @@
 package com.example.store.exception;
 
 
+import com.example.store.enums.ErrorStatus;
+
 public class ApiRequestException extends RuntimeException {
-    public ApiRequestException(String message) {
+    private final ErrorStatus status;
+
+    public ApiRequestException(String message, ErrorStatus status) {
         super(message);
+        this.status = status;
     }
 
-    public ApiRequestException(String message, Throwable throwable) {
+    public ApiRequestException(String message, ErrorStatus status, Throwable throwable) {
         super(message, throwable);
+        this.status = status;
+    }
+
+    public ErrorStatus getStatus() {
+        return status;
     }
 }

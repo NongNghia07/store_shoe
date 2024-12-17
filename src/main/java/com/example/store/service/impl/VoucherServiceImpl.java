@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -33,7 +35,7 @@ public class VoucherServiceImpl implements VoucherService {
         vouchers.setValue(valueDiscountByType(vouchers.getType(), voucherRequestDTO.getValue()));
         voucherRepository.save(vouchers);
         VoucherResponseDTO voucherResponseDTO = new VoucherResponseDTO(vouchers);
-        return ServiceResponseDTO.success(HttpStatus.OK, voucherResponseDTO);
+        return ServiceResponseDTO.success(HttpStatus.OK,"", voucherResponseDTO);
     }
 
     @Override
@@ -62,9 +64,9 @@ public class VoucherServiceImpl implements VoucherService {
         }
     }
 
-    private Boolean checkDate(LocalDateTime start, LocalDateTime end) {
+    private Boolean checkDate(Instant start, Instant end) {
         LocalDateTime now = LocalDateTime.now();
-        return (now.isEqual(start) || now.isAfter(start)) &&
-                (now.isEqual(end) || now.isBefore(end));
+        return (now.isEqual(ChronoLocalDateTime.from(start)) || now.isAfter(ChronoLocalDateTime.from(start))) &&
+                (now.isEqual(ChronoLocalDateTime.from(end)) || now.isBefore(ChronoLocalDateTime.from(end)));
     }
 }

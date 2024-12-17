@@ -57,7 +57,6 @@ public class BillServiceImpl implements BillService {
             bill.setOrder(order);
             bill.setTotalAmount(order.getTotalAmount());
             bill.setTaxAmount(calculateTax(order.getTotalAmount()));
-            bill.setPaymentStatus("paid");
             bill.setDiscount(order.getVoucher() != null? order.getVoucher().getValue() : 0);
             bill.setNetAmount(calculateNetAmount(order.getTotalAmount(), bill.getTaxAmount(), order.getVoucher()));
             bills.add(bill);
@@ -103,6 +102,6 @@ public class BillServiceImpl implements BillService {
         Bill bill = modelMapper.map(billRequestDTO, Bill.class);
         bill = billRepository.save(bill);
         BillResponseDTO billResponseDTO = new BillResponseDTO(bill);
-        return ServiceResponseDTO.success(HttpStatus.OK, billResponseDTO);
+        return ServiceResponseDTO.success(HttpStatus.OK,"", billResponseDTO);
     }
 }

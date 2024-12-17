@@ -17,6 +17,5 @@ public class SupplierResponseDTO {
     public SupplierResponseDTO(Supplier supplier) {
         if(supplier.getId() != null)
             this.id = supplier.getId();
-        this.name = supplier.getName();
     }
 }

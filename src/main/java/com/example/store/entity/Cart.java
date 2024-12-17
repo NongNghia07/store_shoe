@@ -25,7 +25,7 @@ public class Cart implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    @JoinColumn(name = "user_ID")
+    @JoinColumn(name = "user_ID", nullable = false)
     private Users user;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "cart")
